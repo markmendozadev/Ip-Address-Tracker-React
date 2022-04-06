@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { divIcon } from "leaflet";
 
 import { IpContext } from "../store/ip-context";
@@ -14,6 +14,12 @@ const customMarketIcon = divIcon({
 const Map = () => {
   const ctx = useContext(IpContext);
   const { data } = ctx;
+  function ChangeView({ center, zoom }) {
+    const map = useMap();
+    map.setView(center, zoom);
+    return null;
+  }
+
   return (
     <div className="h-custom_height">
       {data && (
@@ -26,6 +32,11 @@ const Map = () => {
           maxZoom={18}
           className="w-screen h-full z-10 overflow-hidden"
         >
+          <ChangeView
+            center={[data.location.lat, data.location.lng]}
+            zoom={16}
+          />
+
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
